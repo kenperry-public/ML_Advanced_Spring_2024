@@ -12,6 +12,9 @@ from sklearn.utils import check_random_state
 
 from sklearn import datasets, svm, metrics
 
+from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
 import pdb
 
 class NN_Helper():
@@ -205,7 +208,124 @@ class Charts_Helper():
             plt.close(fig)
 
         return fig, axs
-    
+
+    def create_sequential_arch_chart(self, visible=None):
+        if visible is None:
+            visible = self.visible
+        
+        # Define rectangle properties
+        rect_width = 0.5
+        rect_height = 1.5  # Adjusted height for longer rectangles
+        spacing = 1.2  # Adjusted spacing for longer rectangles
+
+        # Create figure and axis
+        fig, ax = plt.subplots()
+
+        # Draw rectangles and arrows
+        for i in range(5):
+            rect = plt.Rectangle((i*spacing, 0), rect_width, rect_height, color='lightgrey', edgecolor='black')
+            ax.add_patch(rect)
+
+            if i < 4:
+                ax.annotate('', xy=((i+1)*spacing, rect_height/2), xytext=(i*spacing + rect_width, rect_height/2),
+                            arrowprops=dict(arrowstyle='->', connectionstyle='arc3', color='black'))
+
+        # Set axis limits and labels
+        ax.set_xlim(-0.5, 6)  # Adjusted limit for longer rectangles
+        ax.set_ylim(0, 2)
+        ax.set_aspect('equal')
+        ax.axis('off')
+
+        if not visible:
+            plt.close(fig)
+
+        return fig, ax
+
+    def create_functional_arch_chart(self, visible=None):
+        if visible is None:
+            visible = self.visible
+
+        # Define rectangle properties
+        rect_width = 0.5
+        rect_height = 1.5  # Adjusted height for longer rectangles
+        spacing = 1.2  # Adjusted spacing for longer rectangles
+
+        # Create figure and axis
+        fig, ax = plt.subplots()
+
+        # Draw rectangles and arrows
+        for i in range(5):
+            rect = plt.Rectangle((i*spacing, 0), rect_width, rect_height, color='lightgrey', edgecolor='black')
+            ax.add_patch(rect)
+
+            if i < 4:
+                ax.annotate('', xy=((i+1)*spacing, rect_height/2), xytext=(i*spacing + rect_width, rect_height/2),
+                                arrowprops=dict(arrowstyle='->', connectionstyle='arc3', color='black'))
+
+                if i == 1:
+                    ax.annotate('', xy=(3*spacing + rect_width, rect_height), xytext=(1*spacing, rect_height),
+                                arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=-0.5', color='black'))
+
+        # Set axis limits and labels
+        ax.set_xlim(-0.5, 6)  # Adjusted limit for longer rectangles
+        ax.set_ylim(0, 2)
+        ax.set_aspect('equal')
+        ax.axis('off')
+
+        if not visible:
+            plt.close(fig)
+
+        return fig, ax
+
+
+    def draw_surface(self, visible=None):
+        if visible is None:
+            visible = self.visible
+
+
+        fig = plt.figure(figsize=(12,6))
+        ax = fig.add_subplot(111, projection='3d')
+
+        # Create a 10x10 grid of points
+        x = np.linspace(0, 10, 10)
+        y = np.linspace(0, 10, 10)
+        X, Y = np.meshgrid(x, y)
+
+        # Define a simple quadratic function for Z
+        #Z = np.sin(np.sqrt(X**2 + Y**2))
+
+        Z = np.zeros_like(X) + 2
+        Z += 0.1 * np.sin(.25*X)*np.cos(.25*Y)
+
+        # Plot the surface
+        surf = ax.plot_surface(X, Y, Z, cmap='viridis')
+
+
+        # Add a color bar which maps values to colors
+        fig.colorbar(surf, shrink=0.5, aspect=5)
+
+        ax.set_zlim(1.75,2.25)
+
+        # Label the axes
+        ax.set_xlabel("$\mathbf{x}_1$", fontsize=18)
+        ax.set_ylabel("$\mathbf{x}_2$", fontsize=18)
+        ax.set_zlabel("$\mathbf{y}$", fontsize=18)
+        
+        if not visible:
+            plt.close(fig)
+
+        return fig, ax
+
+    def add_shaded(self, ax, xmin, xmax, ymin, ymax):
+        # Define the vertices of the shaded area polygon
+        zmin = ax.get_zlim()[0]
+        verts = [(xmin, ymin, zmin), (xmax, ymin, zmin), (xmax, ymax, zmin), (xmin, ymax, zmin)]
+
+        # Create a Poly3DCollection and add it to the plot
+        poly = Poly3DCollection([verts], alpha=0.5, facecolors='grey')
+        ax.add_collection3d(poly)
+
+      
     def create_charts(self):
         save_dir = self.save_dir
 
@@ -215,9 +335,34 @@ class Charts_Helper():
         fig, ax = self.create_activation_functions_chart()
         act_func_file = os.path.join(save_dir, "activation_functions.png")
         fig.savefig(act_func_file)
-        
+
+        fig, ax = self.create_sequential_arch_chart()
+        seq_arch_file =  os.path.join(save_dir, "tf_sequential_arch.png")
+        fig.savefig(seq_arch_file)
+
+        fig, ax = self.create_functional_arch_chart()
+        func_arch_file =  os.path.join(save_dir, "tf_functional_arch.png")
+        fig.savefig(func_arch_file)
+
+        fig, ax = self.draw_surface()
+        surface_chart_file_0 = os.path.join(save_dir, "surface_chart_0.png")
+        fig.savefig(surface_chart_file_0)
+
+        fig, ax = self.draw_surface()
+        _= self.add_shaded(ax, 2, 8, 2, 3)
+        surface_chart_file_1 = os.path.join(save_dir, "surface_chart_1.png")
+        fig.savefig(surface_chart_file_1)
+
+        fig, ax = self.draw_surface()
+        _= self.add_shaded(ax, 8, 9, 2, 8)
+        surface_chart_file_2 = os.path.join(save_dir, "surface_chart_2.png")
+        fig.savefig(surface_chart_file_2)
+
         print("Done")
         
-        return { "activation functions": act_func_file
+        return { "activation functions": act_func_file,
+                 "TF Sequential arch" : seq_arch_file,
+                 "TF Function arch"   : func_arch_file,
+                 "surfaces": [ surface_chart_file_0, surface_chart_file_1, surface_chart_file_2 ]
                  }
 
