@@ -325,7 +325,184 @@ class Charts_Helper():
         poly = Poly3DCollection([verts], alpha=0.5, facecolors='grey')
         ax.add_collection3d(poly)
 
-      
+    def draw_ne(self, visible=None):
+        if visible is None:
+            visible = self.visible
+
+        # Set up the figure and axis
+        fig, ax = plt.subplots(figsize=(6, 6))
+
+        # Set axis labels
+        ax.set_xlabel(r'$W_1$', fontsize=14)
+        ax.set_ylabel(r'$W_2$', fontsize=14)
+
+        # Set axis limits
+        ax.set_xlim([-1, 5])
+        ax.set_ylim([-1, 5])
+
+        # Draw the arrow
+        start = np.array([1, 1])  # Base of the arrow (W(t))
+        end = np.array([3, 3])    # Head of the arrow (W(t+1))
+        dx = end[0] - start[0]
+        dy = end[1] - start[1]
+
+        # Draw the arrow
+        ax.arrow(start[0], start[1], dx, dy, head_width=0.3, head_length=0.5, fc='k', ec='k')
+
+        ax.text(start[0] - 0.3, start[1] - 0.3, r'$\mathbf{W}_{(t)}$', fontsize=12)
+        ax.text(end[0] + 0.3, end[1] + 0.5, r'$\mathbf{W}_{(t+1)}$', fontsize=12)
+
+        # Show the plot
+        plt.show()
+
+        if not visible:
+                    plt.close(fig)
+
+
+        return fig, ax
+
+
+    def draw_sw(self, visible=None):
+        if visible is None:
+            visible = self.visible
+
+        # Set up the figure and axis
+        fig, ax = plt.subplots(figsize=(6, 6))
+
+        # Set axis labels
+        ax.set_xlabel(r'$W_1$', fontsize=14)
+        ax.set_ylabel(r'$W_2$', fontsize=14)
+
+        # Set axis limits
+        ax.set_xlim([-1, 5])
+        ax.set_ylim([-1, 5])
+
+        # Draw the arrow
+        end = np.array([1, 1])  # Base of the arrow (W(t))
+        start = np.array([3, 3])    # Head of the arrow (W(t+1))
+        dx = end[0] - start[0]
+        dy = end[1] - start[1]
+
+        # Draw the arrow
+        ax.arrow(start[0], start[1], dx, dy, head_width=0.3, head_length=0.5, fc='k', ec='k')
+
+        # Add labels for the base and head of the arrow
+        ax.text(end[0] - 0.5, end[1] - 0.8, r'$\mathbf{W}_{(t+1)}$', fontsize=12)
+        ax.text(start[0] + 0.3, start[1] + 0.3, r'$\mathbf{W}_{(t)}$', fontsize=12)
+
+
+        # Show the plot
+        plt.show()
+
+        if not visible:
+            plt.close(fig)
+
+
+        return fig, ax
+
+    def draw_se(self, visible=None):
+        if visible is None:
+            visible = self.visible
+
+        # Set up the figure and axis
+        fig, ax = plt.subplots(figsize=(6, 6))
+
+        # Set axis labels
+        ax.set_xlabel(r'$W_1$', fontsize=14)
+        ax.set_ylabel(r'$W_2$', fontsize=14)
+
+        # Set axis limits
+        ax.set_xlim([0, 4])
+        ax.set_ylim([-1, 5])
+
+        # Draw the arrow
+        start = np.array([1, 1])  # Base of the arrow (W(t))
+        end = np.array([3, 3])    # Head of the arrow (W(t+1))
+
+        # From start to end
+        dx = end[0] - start[0]
+        dy = end[1] - start[1]
+
+        ax.arrow(start[0], start[1], dx, dy, head_width=0.2, head_length=0.1, fc='k', ec='k')
+
+        ax.text(start[0] - 0.3, start[1] - 0.3, r'$\mathbf{W}_{(t)}$', fontsize=12)
+        ax.text(end[0] + 0.3, end[1] + 0.5, r'$\mathbf{W}_{(t+1)}$', fontsize=12)
+
+        end2 = np.array([1.75, 0])
+
+
+        # From  start to end2
+        # allow extra space so the 2 arrow heads ending at end2 don't overlap
+        extra_space = .15
+        dx2, dy2 = end2[0] - start[0] - extra_space , end2[1] - start[1] - extra_space
+        ax.arrow(start[0], start[1], dx2, dy2 , head_width=0.2, head_length=0.2, fc='k', ec='blue',
+                 linestyle='dotted', linewidth=3)
+
+        # From end to end2
+        dx3, dy3 = end2[0] - end[0], end2[1] -end[1]
+        ax.arrow(end[0], end[1], dx3, dy3, head_width=0.2, head_length=0.1, fc='k', ec='k')
+
+
+        # Show the plot
+        plt.show()
+
+        if not visible:
+            plt.close(fig)
+
+        return fig, ax
+
+
+    def create_sigmoid_charts(self, visible=None):
+        if visible is None:
+            visible = self.visible
+
+        # Define the sigmoid function
+        def sigmoid(x):
+            return 1 / (1 + np.exp(-x))
+
+        # Calculate the derivative of the sigmoid function
+        def sigmoid_derivative(x):
+            return sigmoid(x) * (1 - sigmoid(x))
+
+        # Calculate the second derivative of the sigmoid function
+        def sigmoid_second_derivative(x):
+            return sigmoid(x) * (1 - sigmoid(x)) * (1 - 2 * sigmoid(x))
+
+        # Create the x-axis values
+        x = np.linspace(-5, 5, 100)
+
+        # Calculate the sigmoid function values
+        y = sigmoid(x)
+
+        # Calculate the derivative values
+        y_derivative = sigmoid_derivative(x)
+
+        # Calculate the second derivative values
+        y_second_derivative = sigmoid_second_derivative(x)
+
+        # Plot the sigmoid function and its derivative
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.plot(x, y, 'b-', linewidth=2, label='Sigmoid Function')
+        ax.plot(x, y_derivative, 'r-', linewidth=2, label='Derivative')
+        ax.axhline(y=0, color='k', linestyle='--')
+        ax.legend(loc='upper left')
+
+        # Shade the regions where the absolute value of the second derivative is less than 0.02
+        ax.fill_between(x, 1, where=np.abs(y_second_derivative) < 0.02, color='lightgray', alpha=0.5)
+
+        # Set the plot title and axis labels
+        ax.set_title('Sigmoid Function and its Derivative')
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+
+        # Show the plot
+        plt.show()
+
+        if not visible:
+            plt.close(fig)
+
+        return fig, ax
+
     def create_charts(self):
         save_dir = self.save_dir
 
@@ -358,11 +535,32 @@ class Charts_Helper():
         surface_chart_file_2 = os.path.join(save_dir, "surface_chart_2.png")
         fig.savefig(surface_chart_file_2)
 
+        fig, ax = self.draw_ne()
+        grad_updt_ne_file = os.path.join(save_dir, "grad_updt_ne.png")
+        fig.savefig(grad_updt_ne_file)
+
+        fig, ax = self.draw_sw()
+        grad_updt_sw_file = os.path.join(save_dir, "grad_updt_sw.png")
+        fig.savefig(grad_updt_sw_file)
+
+        fig, ax = self.draw_se()
+        grad_updt_se_file = os.path.join(save_dir, "grad_updt_se.png")
+        fig.savefig(grad_updt_se_file)
+
+        fig, ax = self. create_sigmoid_charts()
+        sigmoid_file = os.path.join(save_dir, "sigmoid_chart.png")
+        fig.savefig(sigmoid_file)
+
+
         print("Done")
         
         return { "activation functions": act_func_file,
                  "TF Sequential arch" : seq_arch_file,
                  "TF Function arch"   : func_arch_file,
-                 "surfaces": [ surface_chart_file_0, surface_chart_file_1, surface_chart_file_2 ]
+                 "surfaces": [ surface_chart_file_0, surface_chart_file_1, surface_chart_file_2 ],
+                 "gradient update NE": grad_updt_ne_file,
+                 "gradient update SW": grad_updt_sw_file,
+                 "gradient update SE": grad_updt_se_file,
+                 "sigmoid charts": sigmoid_file
                  }
 
