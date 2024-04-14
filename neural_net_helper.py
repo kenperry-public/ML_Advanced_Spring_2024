@@ -503,7 +503,271 @@ class Charts_Helper():
 
         return fig, ax
 
+    def draw_layer(visible=False):
+    # Set up the figure
+        fig, ax = plt.subplots(figsize=(8, 6))
+
+        # Set the figure height to 80% of the diagram height
+        fig_height = 0.8
+        fig_width = 8
+        ax.set_position([ax.get_position().x0, 
+                        (1 - fig_height) / 2, 
+                        ax.get_position().width, 
+                        fig_height])
+
+        # Draw the vertical rectangle
+        rect_width = 0.2
+        rect_height = fig_height
+        rect_x = 0.4
+        rect_y = (1 - fig_height) / 2
+        rect_linewidth = 2
+        ax.add_patch(plt.Rectangle((rect_x, rect_y), rect_width, rect_height, fill=False, color='black', linewidth=rect_linewidth))
+
+        # Draw the 5 circles
+        circle_radius = 0.06
+        circle_spacing = 0.12
+        circle_x = rect_x + rect_width / 2
+        circle_y = np.linspace(rect_y + circle_radius + circle_spacing/2, 
+                              rect_y + rect_height - circle_radius - circle_spacing/2, 5)
+        circle_linewidth = 2
+
+        for y in circle_y:
+            ax.add_artist(plt.Circle((circle_x, y), circle_radius, fill=False, color='blue', linewidth=circle_linewidth))
+
+        # Set the axis limits and aspect ratio
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.set_aspect('equal')
+
+        # Remove the axes
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+        # Show the figure
+        plt.show()
+
+        if not visible:
+            plt.close(fig)
+
+        return fig, ax
+
+    def draw_layer_select(self, visible=False):
+        # Set up the figure
+        fig, ax = plt.subplots(figsize=(8, 6))
+
+        # Set the figure height to 80% of the diagram height
+        fig_height = 0.8
+        fig_width = 8
+        ax.set_position([ax.get_position().x0, 
+                        (1 - fig_height) / 2, 
+                        ax.get_position().width, 
+                        fig_height])
+
+        # Draw the vertical rectangle
+        rect_width = 0.2
+        rect_height = fig_height
+        rect_x = 0.4
+        rect_y = (1 - fig_height) / 2
+        rect_linewidth = 2
+        ax.add_patch(plt.Rectangle((rect_x, rect_y), rect_width, rect_height, fill=False, color='black', linewidth=rect_linewidth))
+
+        # Draw the 5 circles
+        circle_radius = 0.06
+        circle_spacing = 0.12
+        circle_x = rect_x + rect_width / 2
+        circle_y = np.linspace(rect_y + circle_radius + circle_spacing/2, 
+                              rect_y + rect_height - circle_radius - circle_spacing/2, 5)
+        circle_linewidth = 2
+
+        for i, y in enumerate(circle_y):
+            if i == 3:  # Shade the second circle from the top
+                ax.add_artist(plt.Circle((circle_x, y), circle_radius, fill=True, color='blue', linewidth=circle_linewidth))
+            else:
+                ax.add_artist(plt.Circle((circle_x, y), circle_radius, fill=False, color='blue', linewidth=circle_linewidth))
+
+        # Set the axis limits and aspect ratio
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.set_aspect('equal')
+
+        # Remove the axes
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+        # Show the figure
+        plt.show()
+
+        if not visible:
+            plt.close(fig)
+
+        return fig, ax
+
+    def draw_layer_with_2d_elements(self, visible=False):
+        # Set up the figure
+        fig, ax = plt.subplots(figsize=(8, 6))
+
+        # Set the figure height to 80% of the diagram height
+        fig_height = 0.9
+        fig_width = 8
+        ax.set_position([ax.get_position().x0, 
+                        (1 - fig_height) / 2, 
+                        ax.get_position().width, 
+                        fig_height])
+
+        # Draw the vertical rectangle
+        rect_width = 0.2
+        rect_height = fig_height
+        rect_x = 0.4
+        rect_y = (1 - fig_height) / 2
+        rect_linewidth = 2
+        ax.add_patch(plt.Rectangle((rect_x, rect_y), rect_width, rect_height, fill=False, color='black', linewidth=rect_linewidth))
+
+        # Draw the 5 rectangles with internal lines and thicker borders
+        rect_size = 0.12
+        rect_spacing = 0.04
+        rect_x = rect_x + rect_width / 2 - rect_size / 2
+        rect_y_start = rect_y + rect_height / 10
+        rect_y_step = (rect_height - 2 * rect_y_start) / 5
+        rect_linewidth = 2
+
+        for rect_idx in range(5):
+            rect_y = rect_y_start + rect_idx * (rect_size + rect_spacing)
+            ax.add_patch(plt.Rectangle((rect_x, rect_y), rect_size, rect_size, fill=False, color='blue', linewidth=rect_linewidth))
+            ax.add_line(plt.Line2D([rect_x, rect_x + rect_size], [rect_y + rect_size / 2, rect_y + rect_size / 2], color='black', linewidth=rect_linewidth))
+            ax.add_line(plt.Line2D([rect_x + rect_size / 2, rect_x + rect_size / 2], [rect_y, rect_y + rect_size], color='black', linewidth=rect_linewidth))
+
+        # Set the axis limits and aspect ratio
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.set_aspect('equal')
+
+        # Remove the axes
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+        # Show the figure
+        plt.show()
+
+        if not visible:
+            plt.close(fig)
+
+        return fig, ax
+
+    def draw_layer_with_2d_elements_select(self, visible=False):
+        # Set up the figure
+        fig, ax = plt.subplots(figsize=(8, 6))
+
+        # Set the figure height to 80% of the diagram height
+        fig_height = 0.8
+        fig_width = 8
+        ax.set_position([ax.get_position().x0, 
+                        (1 - fig_height) / 2, 
+                        ax.get_position().width, 
+                        fig_height])
+
+        # Draw the vertical rectangle
+        rect_width = 0.2
+        rect_height = fig_height
+        rect_x = 0.4
+        rect_y = (1 - fig_height) / 2
+        rect_linewidth = 2
+        ax.add_patch(plt.Rectangle((rect_x, rect_y), rect_width, rect_height, fill=False, color='black', linewidth=rect_linewidth))
+
+        # Draw the 5 squares
+        square_size = 0.12
+        square_spacing = 0.12
+        square_x = rect_x + rect_width / 2 - square_size / 2
+        square_y = np.linspace(rect_y + square_size / 2 + square_spacing/2, 
+                              rect_y + rect_height - square_size / 2 - square_spacing/2, 5)
+        square_linewidth = 2
+
+        for i, y in enumerate(square_y):
+            if i == 3:  # Shade the second square from the top
+                ax.add_patch(plt.Rectangle((square_x, y - square_size / 2), square_size, square_size, fill=True, color='blue', linewidth=square_linewidth))
+            else:
+                ax.add_patch(plt.Rectangle((square_x, y - square_size / 2), square_size, square_size, fill=False, color='blue', linewidth=square_linewidth))
+
+        # Set the axis limits and aspect ratio
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.set_aspect('equal')
+
+        # Remove the axes
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+        # Show the figure
+        plt.show()
+
+        if not visible:
+            plt.close(fig)
+
+        return fig, ax
+
+    def draw_layer_with_2d_elements_pool(self, visible=False):
+        # Set up the figure
+        fig, ax = plt.subplots(figsize=(8, 6))
+
+        # Set the figure height to 80% of the diagram height
+        fig_height = 0.8
+        fig_width = 8
+        ax.set_position([ax.get_position().x0, 
+                        (1 - fig_height) / 2, 
+                        ax.get_position().width, 
+                        fig_height])
+
+        # Draw the vertical rectangle
+        rect_width = 0.2
+        rect_height = fig_height
+        rect_x = 0.4
+        rect_y = (1 - fig_height) / 2
+        rect_linewidth = 2
+        ax.add_patch(plt.Rectangle((rect_x, rect_y), rect_width, rect_height, fill=False, color='black', linewidth=rect_linewidth))
+
+        # Draw the 5 circles (twice as big)
+        circle_radius = 0.02
+        circle_spacing = 0.12
+        circle_x = rect_x + rect_width / 2
+        circle_y = np.linspace(rect_y + circle_radius + circle_spacing/2, 
+                              rect_y + rect_height - circle_radius - circle_spacing/2, 5)
+        circle_linewidth = 2
+
+        for i, y in enumerate(circle_y):
+            if i == 3:  # Shade the second circle from the top
+                ax.add_artist(plt.Circle((circle_x, y), circle_radius, fill=True, color='blue', linewidth=circle_linewidth))
+            else:
+                ax.add_artist(plt.Circle((circle_x, y), circle_radius, fill=False, color='blue', linewidth=circle_linewidth))
+
+        # Set the axis limits and aspect ratio
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.set_aspect('equal')
+
+        # Remove the axes
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+        # Show the figure
+        plt.show()
+
+        if not visible:
+            plt.close(fig)
+
+        return fig, ax
+
+
+
     def create_charts(self):
+        def create_and_save( method, fname ):
+            # Invoke method to draw figure, save it in file, add entry to file_dict dictionary
+             fig, ax = method()
+             out_fname = os.path.join(save_dir, fname + ".png")
+             fig.savefig(out_fname)
+
+             file_dict[fname] = out_fname
+             
+             return out_fname
+            
         save_dir = self.save_dir
 
         print("Saving to directory: ", save_dir)
@@ -551,16 +815,30 @@ class Charts_Helper():
         sigmoid_file = os.path.join(save_dir, "sigmoid_chart.png")
         fig.savefig(sigmoid_file)
 
+        file_dict = {
+            "activation functions": act_func_file,
+            "TF Sequential arch" : seq_arch_file,
+            "TF Function arch"   : func_arch_file,
+            "surfaces": [ surface_chart_file_0, surface_chart_file_1, surface_chart_file_2 ],
+            "gradient update NE": grad_updt_ne_file,
+            "gradient update SW": grad_updt_sw_file,
+            "gradient update SE": grad_updt_se_file,
+            "sigmoid charts": sigmoid_file
+            }
+        
 
+        # NEWER: use create_and_save convenience function to avoid repeated code for each diagram that we see above
+        _ = create_and_save(self.draw_layer, "layer")
+
+        _ = create_and_save(self.draw_layer_select, "layer_select")
+        
+        _=  create_and_save(self.draw_layer_with_2d_elements, "layer_w_2d_elements")
+
+        _ = create_and_save(self.draw_layer_with_2d_elements_select, "layer_w_2d_elements_select")
+
+        _ = create_and_save(self.draw_layer_with_2d_elements_pool, "layer_w_2d_elements_pool")
+        
         print("Done")
         
-        return { "activation functions": act_func_file,
-                 "TF Sequential arch" : seq_arch_file,
-                 "TF Function arch"   : func_arch_file,
-                 "surfaces": [ surface_chart_file_0, surface_chart_file_1, surface_chart_file_2 ],
-                 "gradient update NE": grad_updt_ne_file,
-                 "gradient update SW": grad_updt_sw_file,
-                 "gradient update SE": grad_updt_se_file,
-                 "sigmoid charts": sigmoid_file
-                 }
+        return file_dict
 
